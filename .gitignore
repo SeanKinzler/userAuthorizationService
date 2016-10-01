@@ -1,0 +1,8 @@
+#Authentication keys
+auth.js
+
+#Node Modules
+node_modules
+
+#Logs
+npm-debug.log
