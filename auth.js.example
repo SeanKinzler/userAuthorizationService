@@ -1,4 +1,14 @@
 module.exports = {
+  facebookAuth: {
+  'clientID': ___,
+  'clientSecret': ___,
+  'callbackURL': 'http://localhost:8080/login/facebook/callback'
+  },
+  twitterAuth: {
+  'consumerKey': ___,
+  'consumerSecret': ___,
+  'callbackURL': 'http://localhost:8080/login/twitter/callback'
+  },
   googleAuth: {
     'clientID': ___,
     'clientSecret': ___,
