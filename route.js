@@ -8,25 +8,6 @@ module.exports = (app, passport) => {
   app.use(express.static(__dirname));
 
   //Google:
-  // app.get('/login/google/callback',(req, res, next) => {
-  //   console.log('In Callback');
-  //   passport.authenticate('google', (err, user, info) => {
-  //     console.log(Arguments);
-  //     if(err) { //Case: Error
-  //       console.log('Auth error');
-  //       return next(err); //NOTE: Make sure that this works.
-  //     } else if(!user) {  //Case: Authentication failed
-  //       console.log('Auth failure');
-  //       res.send(400, 'Authentication failed');
-  //       res.redirect('/');
-  //     } else {  //Case: Authentication succeeded
-  //       console.log('Auth success');
-  //       res.send({message: 'Authentication successful'});
-  //       res.redirect('/');
-  //     }
-  //   });
-  // });
-
   app.get('/login/google', passport.authenticate('google', {scope: ['profile', 'email']}));
   app.get('/login/google/callback', passport.authenticate('google', {
     successRedirect : '/login/google/success',
@@ -53,10 +34,4 @@ module.exports = (app, passport) => {
   }));
   app.get('/login/twitter/success', (req, res) => {res.send({message: 'success'})});
   app.get('/login/twitter/failure', (req, res) => {res.send({message: 'failure'})});
-
-  //post to register
-  app.post('/register', (req, res) => {});
-  
-  //delete to register
-  app.delete('/register', (req, res) => {});
 };
