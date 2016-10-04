@@ -11,7 +11,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 
 //Setup MongoDB:
-const User = require('./database').user;
+// const User = require('./database').user;
 
 //Setup Authorization Variables:
 const configAuth = require('./auth');
@@ -22,13 +22,15 @@ module.exports = (passport) => {
   //********************
   //NOTE: FIGURE OUT HOW THIS WORKS
   passport.serializeUser((user, done) => {
-    done(null, user.id);  //NOTE: WHAT IS user.id?
+    done(null, user);  //NOTE: WHAT IS user.id?
+    // done(null, user.id);  //NOTE: WHAT IS user.id?
   });
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-      done(err, user);
-    });
+    done(null, id._json);
+    // User.findById(id, (err, user) => {
+    //   done(err, user);
+    // });
   });
 
   //********************
@@ -48,143 +50,143 @@ module.exports = (passport) => {
     (token, refreshToken, profile, done) => {
       console.log('before nextTick');
       process.nextTick(() => {
+        return done(null, profile)
         //Search for the user in our database:
-        searchGoogleUser(token, profile, done);
+        // searchGoogleUser(token, profile, done);
       });
     }
   );
 
   //Creates a new Google user
-  const createGoogleUser = (token, profile) => {
-    const newUser = new User();
-    newUser.google.id = profile.id;
-    newUser.google.token = token;
-    newUser.google.name = profile.displayName;
-    newUser.google.email = profile.emails[0].value;
+  // const createGoogleUser = (token, profile) => {
+  //   const newUser = new User();
+  //   newUser.google.id = profile.id;
+  //   newUser.google.token = token;
+  //   newUser.google.name = profile.displayName;
+  //   newUser.google.email = profile.emails[0].value;
 
-    return newUser;
-  }
+  //   return newUser;
+  // }
 
   //Search for a Google user in our database:
-  const searchGoogleUser = (token, profile, done) => {
-    console.log('inside searchGoogleUser');
-    User.findOne({'google.id': profile.id}, (err, user) => {
-      if (err) {                  //Error occured
-        return done(err);
-      } else if (user) {          //User found, proceed with login
-        return done(null, user);
-      } else {                    //No user found
-        //Create a new user:
-        const newUser = createGoogleUser(token, profile);
-        //Save the new user:
-        newUser.save((err) => {
-          if (err) {
-            throw err;
-          }
-          return done(null, newUser);
-        });
-      }
-    });
-  }
+  // const searchGoogleUser = (token, profile, done) => {
+  //   User.findOne({'google.id': profile.id}, (err, user) => {
+  //     if (err) {                  //Error occured
+  //       return done(err);
+  //     } else if (user) {          //User found, proceed with login
+  //       return done(null, user);
+  //     } else {                    //No user found
+  //       //Create a new user:
+  //       const newUser = createGoogleUser(token, profile);
+  //       //Save the new user:
+  //       newUser.save((err) => {
+  //         if (err) {
+  //           throw err;
+  //         }
+  //         return done(null, newUser);
+  //       });
+  //     }
+  //   });
+  // }
 
   passport.use(googleStrategy);
 
   //**********
   //Facebook
   //**********
-  passport.use(new FacebookStrategy({
-      clientID: configAuth.facebookAuth.clientID,
-      clientSecret: configAuth.facebookAuth.clientSecret,
-      callbackURL: configAuth.facebookAuth.callbackURL
-    },
-    (token, refreshToken, profile, done) => {
-      process.nextTick(() => {searchFacebookUser(token, profile, done)}); //Search for the user in our database
-    })
-  );
+  // passport.use(new FacebookStrategy({
+  //     clientID: configAuth.facebookAuth.clientID,
+  //     clientSecret: configAuth.facebookAuth.clientSecret,
+  //     callbackURL: configAuth.facebookAuth.callbackURL
+  //   },
+  //   (token, refreshToken, profile, done) => {
+  //     process.nextTick(() => {searchFacebookUser(token, profile, done)}); //Search for the user in our database
+  //   })
+  // );
 
   //Creates a new Facebook user
-  const createFacebookUser = (token, profile) => {
-    const newUser = new User();
-    newUser.facebook.id = profile.id;
-    newUser.facebook.token = token;
-    newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
-    newUser.facebook.email = profile.emails[0].value;
+  // const createFacebookUser = (token, profile) => {
+  //   const newUser = new User();
+  //   newUser.facebook.id = profile.id;
+  //   newUser.facebook.token = token;
+  //   newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+  //   newUser.facebook.email = profile.emails[0].value;
 
-    return newUser;
-  }
+  //   return newUser;
+  // }
 
   //Search for a Facebook user in our database:
-  const searchFacebookUser = (token, profile, done) => {
-    User.findOne({'facebook.id': profile.id}, (err, user) => {
-      if (err) {                  //Error occured
-        return done(err);
-      } else if (user) {          //User found, proceed with login
-        return done(null, user);
-      } else {                    //No user found
-        //Create a new user:
-        const newUser = createFacebookUser(token, profile);
-        //Save the new user:
-        newUser.save((err) => {
-          if (err) {
-            throw err;
-          }
-          return done(null, newUser);
-        });
-      }
-    });
-  }
+  // const searchFacebookUser = (token, profile, done) => {
+  //   User.findOne({'facebook.id': profile.id}, (err, user) => {
+  //     if (err) {                  //Error occured
+  //       return done(err);
+  //     } else if (user) {          //User found, proceed with login
+  //       return done(null, user);
+  //     } else {                    //No user found
+  //       //Create a new user:
+  //       const newUser = createFacebookUser(token, profile);
+  //       //Save the new user:
+  //       newUser.save((err) => {
+  //         if (err) {
+  //           throw err;
+  //         }
+  //         return done(null, newUser);
+  //       });
+  //     }
+  //   });
+  // }
 
-  passport.use(FacebookStrategy);
+  // passport.use(FacebookStrategy);
 
   //**********
   //Twitter
   //**********
-  passport.use(new TwitterStrategy({
-      consumerKey: configAuth.twitterAuth.consumerKey,
-      consumerSecret: configAuth.twitterAuth.consumerSecret,
-      callbackURL: configAuth.twitterAuth.callbackURL
-    },
-    (token, refreshToken, profile, done) => {
-      process.nextTick(() => {
-        //Search for the user in our database:
-        searchTwitterUser(token, profile, done);
-      });
-    })
-  );
+  // passport.use(new TwitterStrategy({
+  //     consumerKey: configAuth.twitterAuth.consumerKey,
+  //     consumerSecret: configAuth.twitterAuth.consumerSecret,
+  //     callbackURL: configAuth.twitterAuth.callbackURL
+  //   },
+  //   (token, refreshToken, profile, done) => {
+  //     process.nextTick(() => {
+  //       //Search for the user in our database:
+  //       searchTwitterUser(token, profile, done);
+  //     });
+  //   })
+  // );
 
   //Creates a new Twitter user
-  const createTwitterUser = (token, profile) => {
-    const newUser = new User();
-    newUser.twitter.id = profile.id;
-    newUser.twitter.token = token;
-    newUser.twitter.name = profile.name.givenName + ' ' + profile.name.familyName;
-    newUser.twitter.email = profile.emails[0].value;
+  // const createTwitterUser = (token, profile) => {
+  //   const newUser = new User();
+  //   newUser.twitter.id = profile.id;
+  //   newUser.twitter.token = token;
+  //   newUser.twitter.name = profile.name.givenName + ' ' + profile.name.familyName;
+  //   newUser.twitter.email = profile.emails[0].value;
 
-    return newUser;
-  }
+  //   return newUser;
+  // }
 
   //Search for a Twitter user in our database:
-  const searchTwitterUser = (token, profile, done) => {
-    User.findOne({'twitter.id': profile.id}, (err, user) => {
-      if (err) {                  //Error occured
-        return done(err);
-      } else if (user) {          //User found, proceed with login
-        return done(null, user);
-      } else {                    //No user found
-        //Create a new user:
-        const newUser = createTwitterUser(token, profile);
-        //Save the new user:
-        newUser.save((err) => {
-          if (err) {
-            throw err;
-          }
-          return done(null, newUser);
-        });
-      }
-    });
-  }
+  // const searchTwitterUser = (token, profile, done) => {
+  //   User.findOne({'twitter.id': profile.id}, (err, user) => {
+  //     if (err) {                  //Error occured
+  //       return done(err);
+  //     } else if (user) {          //User found, proceed with login
+  //       return done(null, user);
+  //     } else {                    //No user found
+  //       //Create a new user:
+  //       const newUser = createTwitterUser(token, profile);
+  //       //Save the new user:
+  //       newUser.save((err) => {
+  //         if (err) {
+  //           throw err;
+  //         }
+  //         return done(null, newUser);
+  //       });
+  //     }
+  //   });
+  // }
 
-  passport.use(TwitterStrategy);
+  // passport.use(TwitterStrategy);
 
 
   //**********

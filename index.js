@@ -1,12 +1,12 @@
 const express = require('express');
 const session = require('express-session')
 const app = express();
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const passport = require('passport');
 
 //Setup Database:
-const database = require('./database');
-mongoose.connect('mongodb://localhost/test');
+// const database = require('./database');
+// mongoose.connect('mongodb://localhost/test');
 // mongoose.connect(database.url);
 
 //Setup Passport:

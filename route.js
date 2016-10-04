@@ -4,18 +4,7 @@ const passport = require('passport');
 require('./login.js')(passport);
 
 module.exports = (app, passport) => {
-  app.post('/register', (req, res) => {});
-  app.delete('/register', (req, res) => {});
-  // app.post('/login', (req, res) => {});
-
   //Testing Interface:
-
-  // app.get('/', (req, res) => {
-  //   console.log('Index.html');
-  //   console.log(__dirname + '/index.html');
-  //   res.redirect(__dirname + '/index.html');
-  // })
-
   app.use(express.static(__dirname));
 
   //Google:
@@ -43,7 +32,8 @@ module.exports = (app, passport) => {
     successRedirect : '/login/google/success',
     failureRedirect : '/login/google/failure'
   }));
-  app.get('/login/google/success', (req, res) => {res.send({message: 'success', data: JSON.stringify(req['user']['google'])})});
+  app.get('/login/google/success', (req, res) => {res.send({ message: 'success', data: JSON.stringify(req.user) })});
+  // app.get('/login/google/success', (req, res) => {res.send({message: 'success', data: JSON.stringify(req['user']['google'])})});
   app.get('/login/google/failure', (req, res) => {res.send({message: 'failure'})});
 
   //Facebook:
@@ -69,8 +59,4 @@ module.exports = (app, passport) => {
   
   //delete to register
   app.delete('/register', (req, res) => {});
-
-  //post to login
-  app.post('/login', (req, res) => {});
-  // app.post('/login/google', (req, res) => {});
 };
