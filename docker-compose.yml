@@ -1,0 +1,9 @@
+version: "2"
+
+services: 
+  auth: 
+    image: seankinzler/auth
+    volumes: 
+      - ./:/my-dir
+    ports: 
+      - "8080:8080"
